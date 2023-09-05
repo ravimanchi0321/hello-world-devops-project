@@ -10,8 +10,14 @@
         mode: "0755"   
     - name: COPY DEPLOYMENT FILE
       copy:
-        src: /var/lib/jenkins/workspace/k8s/playbooks/pod.yaml
+        src: /var/lib/jenkins/workspace/python/playbooks/deployment.yaml
         dest: /opt/playbooks
+        
+    - name: COPY DEPLOYMENT FILE
+      copy:
+        src: /var/lib/jenkins/workspace/python/playbooks/service.yaml
+        dest: /opt/playbooks
+        
     - name: CHECK FILE
       shell: ls -l /opt/playbooks/
       register: copy        
@@ -21,7 +27,11 @@
         var: copy.stdout_lines              
         
     - name: DEPLOYMENT ON K8 CLUSTER
-      shell: kubectl apply -f /opt/playbooks/pod.yaml
+      shell: kubectl apply -f /opt/playbooks/deployment.yaml
+      register: deployment
+      
+    - name: DEPLOYMENT ON K8 CLUSTER
+      shell: kubectl apply -f /opt/playbooks/service.yaml
       register: deployment
 
     - name: DEPLOYMENT STATUS      
